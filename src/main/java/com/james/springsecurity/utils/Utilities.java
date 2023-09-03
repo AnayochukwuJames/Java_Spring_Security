@@ -1,2 +1,4 @@
-package com.james.springsecurity.utils;public class Utilities {
+package com.james.springsecurity.utils;
+
+public class Utilities {
 }

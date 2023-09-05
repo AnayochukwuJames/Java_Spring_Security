@@ -1,16 +1,13 @@
 package com.james.springsecurity.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.james.springsecurity.dto.UserDto;
 import com.james.springsecurity.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 @Data
@@ -18,12 +15,13 @@ import java.util.Collection;
 @NoArgsConstructor
 @Builder
 @Entity
-public class User implements UserDetails {
+@Table(name = "users")
+public class Users implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false, unique = true)
-    private String userNames;
+    private String username;
     private String password;
     @Enumerated
     private Role role;
@@ -37,7 +35,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.userNames;
+        return this.username;
     }
     public String getPassword(){
         return this.password;
@@ -62,10 +60,10 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-    public User(UserDto userDto){
+    public Users(UserDto userDto){
         this.role = Role.valueOf(userDto.getRole().toUpperCase());
         this.password = new BCryptPasswordEncoder().encode(userDto.getPassword());
-        this.userNames = userDto.getUserName();
+        this.username = userDto.getUserName();
 
 
     }

@@ -2,15 +2,20 @@ package com.james.springsecurity.serviceImp;
 
 import com.james.springsecurity.dto.UserDto;
 import com.james.springsecurity.enums.Role;
-import com.james.springsecurity.models.User;
+import com.james.springsecurity.models.Users;
 import com.james.springsecurity.repository.UserRepository;
 import com.james.springsecurity.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
+@Service
+@Primary
 public class UserServiceImp implements UserService, UserDetailsService {
+
     private final UserRepository userRepository;
 @Autowired
 public UserServiceImp(UserRepository userRepository) {
@@ -19,27 +24,27 @@ public UserServiceImp(UserRepository userRepository) {
     @Override
     public UserDetails loadUserByUserNames(String userNames)
     throws UsernameNotFoundException{
-        return (UserDetails) userRepository.findByUserName(userNames);
+        return (UserDetails) userRepository.findByUsername(userNames);
     }
     @Override
-    public User addUser(UserDto user) {
-        return userRepository.save(new User(user));
+    public Users addUser(UserDto user) {
+        return userRepository.save(new Users(user));
     }
     @Override
-    public User findByUserId(Long id) {
+    public Users findByUserId(Long id) {
         return null;
     }
     @Override
-    public User findByUser(Long id) {
+    public Users findByUser(Long id) {
         return userRepository.findByRoleAndId(Role.ROLE_USER, id).orElseThrow(() -> new NullPointerException(String
-                .format("No such User with ID: %d", id)));
+                .format("No such Users with ID: %d", id)));
     }
 //    @Override
-//    public User findByAdmin(Long id) {
+//    public Users findByAdmin(Long id) {
 //        return UserRepository.findByRoleId(Role.ROLE_ADMIN, id).orEsleThrow(()->new NullPointerException(String.format("No such Admin with ID:",id)));
 //    }
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return (UserDetails) userRepository.findByUserName(username);
+        return (UserDetails) userRepository.findByUsername(username);
     }
 }
